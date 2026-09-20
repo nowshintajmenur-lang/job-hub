@@ -1,41 +1,46 @@
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, Building2, Calendar, ExternalLink } from "lucide-react";
 
 const MOCK_APPLICATIONS = [
   {
     id: "1",
     jobTitle: "Senior Frontend Engineer",
     company: "Northbridge",
-    dateApplied: "2026-09-17",
+    dateApplied: "Sep 17, 2026",
     status: "Reviewing",
+    letter: "N",
   },
   {
     id: "2",
     jobTitle: "Product Designer",
     company: "Chattogram Labs",
-    dateApplied: "2026-09-15",
+    dateApplied: "Sep 15, 2026",
     status: "Applied",
+    letter: "C",
   },
   {
     id: "3",
     jobTitle: "Backend Engineer (Node.js)",
     company: "CloudNine",
-    dateApplied: "2026-09-13",
+    dateApplied: "Sep 13, 2026",
     status: "Interview",
+    letter: "C",
   },
   {
     id: "4",
     jobTitle: "UI/UX Designer",
     company: "DesignHub",
-    dateApplied: "2026-08-20",
+    dateApplied: "Aug 20, 2026",
     status: "Rejected",
+    letter: "D",
   },
   {
     id: "5",
     jobTitle: "Marketing Manager",
     company: "Dhaka Retail",
-    dateApplied: "2026-08-05",
+    dateApplied: "Aug 5, 2026",
     status: "Hired",
+    letter: "D",
   },
 ];
 
@@ -46,7 +51,7 @@ function statusStyle(status) {
     case "Interview":
       return { background: "#111827", color: "#FFFFFF" };
     case "Reviewing":
-      return { background: "#F3F4F6", color: "#374151" };
+      return { background: "#FEF3C7", color: "#B45309" };
     case "Applied":
       return { background: "#DBEAFE", color: "#2563EB" };
     case "Rejected":
@@ -70,6 +75,14 @@ export default function MyApplications() {
     return matchesSearch && matchesTab;
   });
 
+  const counts = STATUS_TABS.reduce((acc, tab) => {
+    acc[tab] =
+      tab === "All"
+        ? MOCK_APPLICATIONS.length
+        : MOCK_APPLICATIONS.filter((a) => a.status === tab).length;
+    return acc;
+  }, {});
+
   return (
     <div style={{ fontFamily: "sans-serif" }}>
       <h1 style={{ color: "#111827", marginBottom: "0.2rem" }}>My Applications</h1>
@@ -77,105 +90,186 @@ export default function MyApplications() {
         Track the status of jobs you've applied to.
       </p>
 
-      {/* Search bar */}
+      {/* Summary stat strip */}
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          border: "1px solid #E5E7EB",
-          borderRadius: "8px",
-          padding: "0.6rem 1rem",
-          width: "320px",
-          marginBottom: "1.2rem",
-          background: "#FFFFFF",
+          gap: "1rem",
+          marginBottom: "1.5rem",
+          flexWrap: "wrap",
         }}
       >
-        <Search size={16} color="#9CA3AF" />
-        <input
-          style={{
-            border: "none",
-            outline: "none",
-            fontSize: "0.9rem",
-            width: "100%",
-          }}
-          type="text"
-          placeholder="Search by job title or company..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Status tabs */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-        {STATUS_TABS.map((tab) => (
-          <button
+        {STATUS_TABS.filter((t) => t !== "All").map((tab) => (
+          <div
             key={tab}
-            onClick={() => setActiveTab(tab)}
             style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "8px",
+              flex: "1 1 140px",
+              background: "#FFFFFF",
               border: "1px solid #E5E7EB",
-              background: activeTab === tab ? "#2563EB" : "#FFFFFF",
-              color: activeTab === tab ? "#FFFFFF" : "#374151",
-              fontSize: "0.85rem",
-              fontWeight: 600,
-              cursor: "pointer",
+              borderRadius: "10px",
+              padding: "1rem",
             }}
           >
-            {tab}
-          </button>
+            <p style={{ margin: 0, color: "#6B7280", fontSize: "0.8rem" }}>{tab}</p>
+            <h2 style={{ margin: "0.2rem 0 0", color: "#111827", fontSize: "1.5rem" }}>
+              {counts[tab]}
+            </h2>
+          </div>
         ))}
       </div>
 
-      {/* Table */}
+      {/* Search + Filter card */}
       <div
         style={{
           background: "#FFFFFF",
           border: "1px solid #E5E7EB",
-          borderRadius: "10px",
+          borderRadius: "12px",
           padding: "1.5rem",
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1rem",
+            marginBottom: "1.2rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              border: "1px solid #E5E7EB",
+              borderRadius: "8px",
+              padding: "0.6rem 1rem",
+              width: "320px",
+            }}
+          >
+            <Search size={16} color="#9CA3AF" />
+            <input
+              style={{
+                border: "none",
+                outline: "none",
+                fontSize: "0.9rem",
+                width: "100%",
+              }}
+              type="text"
+              placeholder="Search by job title or company..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            {STATUS_TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                style={{
+                  padding: "0.45rem 0.9rem",
+                  borderRadius: "8px",
+                  border: "1px solid #E5E7EB",
+                  background: activeTab === tab ? "#2563EB" : "#FFFFFF",
+                  color: activeTab === tab ? "#FFFFFF" : "#374151",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Applications list */}
         {filtered.length === 0 ? (
           <p style={{ color: "#6B7280", textAlign: "center", padding: "2rem 0" }}>
             No applications match your search/filter.
           </p>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ textAlign: "left", borderBottom: "1px solid #E5E7EB" }}>
-                <th style={{ padding: "0.6rem 0", color: "#6B7280", fontSize: "0.8rem" }}>Role</th>
-                <th style={{ padding: "0.6rem 0", color: "#6B7280", fontSize: "0.8rem" }}>Company</th>
-                <th style={{ padding: "0.6rem 0", color: "#6B7280", fontSize: "0.8rem" }}>Applied</th>
-                <th style={{ padding: "0.6rem 0", color: "#6B7280", fontSize: "0.8rem" }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((app) => (
-                <tr key={app.id} style={{ borderBottom: "1px solid #F3F4F6" }}>
-                  <td style={{ padding: "0.8rem 0", color: "#111827", fontWeight: 600 }}>
-                    {app.jobTitle}
-                  </td>
-                  <td style={{ padding: "0.8rem 0", color: "#6B7280" }}>{app.company}</td>
-                  <td style={{ padding: "0.8rem 0", color: "#6B7280" }}>{app.dateApplied}</td>
-                  <td style={{ padding: "0.8rem 0" }}>
-                    <span
-                      style={{
-                        ...statusStyle(app.status),
-                        padding: "0.25rem 0.7rem",
-                        borderRadius: "9999px",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {app.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+            {filtered.map((app) => (
+              <div
+                key={app.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  border: "1px solid #F3F4F6",
+                  borderRadius: "10px",
+                  padding: "1rem 1.2rem",
+                  flexWrap: "wrap",
+                  gap: "0.8rem",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <div
+                    style={{
+                      width: "44px",
+                      height: "44px",
+                      borderRadius: "8px",
+                      background: "#111827",
+                      color: "#FFFFFF",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {app.letter}
+                  </div>
+                  <div>
+                    <p style={{ margin: 0, color: "#111827", fontWeight: 600, fontSize: "0.95rem" }}>
+                      {app.jobTitle}
+                    </p>
+                    <div style={{ display: "flex", gap: "1rem", marginTop: "0.2rem" }}>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                          color: "#6B7280",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        <Building2 size={13} /> {app.company}
+                      </span>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                          color: "#6B7280",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        <Calendar size={13} /> {app.dateApplied}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <span
+                    style={{
+                      ...statusStyle(app.status),
+                      padding: "0.3rem 0.8rem",
+                      borderRadius: "9999px",
+                      fontSize: "0.78rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {app.status}
+                  </span>
+                  <ExternalLink size={16} color="#9CA3AF" style={{ cursor: "pointer" }} />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
