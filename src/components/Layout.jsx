@@ -8,13 +8,11 @@ export default function Layout() {
       <Sidebar />
 
       <div style={{ marginLeft: "230px" }}>
-        {/* Top header */}
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "1rem",
             padding: "1rem 2rem",
             borderBottom: "1px solid #E5E7EB",
             background: "#FFFFFF",
@@ -28,7 +26,7 @@ export default function Layout() {
               border: "1px solid #E5E7EB",
               borderRadius: "8px",
               padding: "0.5rem 0.9rem",
-              width: "260px",
+              width: "320px",
               color: "#9CA3AF",
             }}
           >
@@ -36,10 +34,31 @@ export default function Layout() {
             <span style={{ fontSize: "0.85rem" }}>Search jobs, applications...</span>
           </div>
 
-          <Bell size={20} color="#6B7280" />
+          <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+            <Bell size={20} color="#6B7280" />
+            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  background: "#DBEAFE",
+                  color: "#2563EB",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: 700,
+                }}
+              >
+                J
+              </div>
+              <span style={{ color: "#111827", fontWeight: 600, fontSize: "0.9rem" }}>
+                Jane Doe
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Page content */}
         <main style={{ padding: "2rem" }}>
           <Outlet />
         </main>
